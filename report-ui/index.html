@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Formula Intelligence Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero-section">
+        <div class="hero-copy">
+          <p class="eyebrow">Formula Intelligence Control Center</p>
+          <h1 id="project-title">Dynamic Formula Benchmark</h1>
+          <p id="project-subtitle" class="hero-subtitle"></p>
+          <div class="hero-tags">
+            <span class="hero-tag hero-tag-verified">Correctness Verified</span>
+            <span class="hero-tag">1M Records</span>
+            <span class="hero-tag">3 Execution Engines</span>
+          </div>
+        </div>
+        <div class="hero-orbital-card">
+          <div class="orbital-card-header">
+            <span>Benchmark Status</span>
+            <span class="status-pill">Live from measured results</span>
+          </div>
+          <div class="orbital-metrics">
+            <div>
+              <strong id="fastest-method">—</strong>
+              <span>Fastest Overall</span>
+            </div>
+            <div>
+              <strong id="formula-count">—</strong>
+              <span>Formulas Benchmarked</span>
+            </div>
+            <div>
+              <strong id="record-count">—</strong>
+              <span>Records per Formula</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-grid">
+        <section class="section-card spotlight-card" aria-labelledby="overview-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Overview</p>
+              <h2 id="overview-heading">Benchmark Snapshot</h2>
+            </div>
+            <button id="refresh-button" class="ghost-button" type="button">Refresh Data</button>
+          </div>
+          <div id="overview-metrics" class="metrics-grid"></div>
+        </section>
+
+        <section class="section-card correctness-card" aria-labelledby="correctness-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Validation</p>
+              <h2 id="correctness-heading">Correctness Verification Matrix</h2>
+            </div>
+          </div>
+          <div id="correctness-grid" class="correctness-grid"></div>
+        </section>
+
+        <section class="section-card performance-card" aria-labelledby="performance-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Latency</p>
+              <h2 id="performance-heading">Performance Comparison</h2>
+            </div>
+            <div class="legend-set">
+              <span><i class="legend-swatch method-csharp"></i>C#</span>
+              <span><i class="legend-swatch method-sql"></i>SQL</span>
+              <span><i class="legend-swatch method-python"></i>Python</span>
+            </div>
+          </div>
+          <div class="performance-layout">
+            <div id="summary-cards" class="summary-cards"></div>
+            <div class="chart-panel">
+              <div class="chart-panel-header">
+                <h3>Average Runtime by Method</h3>
+                <p>Lower is better</p>
+              </div>
+              <div id="runtime-chart" class="bar-chart"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card formula-card" aria-labelledby="formula-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Per Formula</p>
+              <h2 id="formula-heading">Formula-Level Runtime Analysis</h2>
+            </div>
+          </div>
+          <div class="formula-toolbar">
+            <label for="formula-filter">Show category</label>
+            <select id="formula-filter">
+              <option value="all">All formulas</option>
+              <option value="Arithmetic">Arithmetic</option>
+              <option value="Complex">Complex</option>
+              <option value="Conditional">Conditional</option>
+            </select>
+          </div>
+          <div class="formula-visuals">
+            <div class="chart-panel wide">
+              <div class="chart-panel-header">
+                <h3>Runtime Trend Across Formulas</h3>
+                <p>Each point represents one formula across three engines</p>
+              </div>
+              <svg id="formula-trend-chart" viewBox="0 0 920 320" preserveAspectRatio="none"></svg>
+            </div>
+            <div id="formula-cards" class="formula-cards"></div>
+          </div>
+        </section>
+
+        <section class="section-card tradeoff-card" aria-labelledby="tradeoff-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Architecture</p>
+              <h2 id="tradeoff-heading">Trade-Off Radar</h2>
+              <p class="section-note">
+                Architectural Assessment: these scores are qualitative engineering evaluations, not live benchmark timings from the database.
+              </p>
+            </div>
+          </div>
+          <div id="tradeoff-grid" class="tradeoff-grid"></div>
+        </section>
+
+        <section class="section-card recommendation-card" aria-labelledby="recommendation-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Decision Layer</p>
+              <h2 id="recommendation-heading">Final Recommendation</h2>
+            </div>
+          </div>
+          <div id="recommendation-grid" class="recommendation-grid"></div>
+        </section>
+
+        <section class="section-card ai-card" aria-labelledby="ai-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Intelligence Engine</p>
+              <h2 id="ai-heading">Dynamic Benchmark Intelligence Report</h2>
+            </div>
+            <div class="ai-actions">
+              <button id="generate-analysis-button" class="ghost-button" type="button">Generate Analysis</button>
+              <a id="download-pdf-link" class="ghost-button ghost-link" href="/api/analysis/download.pdf">Download PDF Report</a>
+            </div>
+          </div>
+          <div class="ai-note">
+            <strong>How this works:</strong>
+            <span>
+              This local intelligence engine recomputes benchmark insights from the measured SQL Server results, generates evidence-based commentary, and exports a polished technical PDF. It does not replace Python, C#, or SQL execution.
+            </span>
+          </div>
+          <div class="ask-benchmark-shell">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="section-kicker">Interactive Q&amp;A</p>
+                <h3>Ask the Benchmark</h3>
+                <p class="section-note">
+                  Ask an open question about speed, stability, correctness, complex formulas, or architectural fit. The answer is generated locally from the measured benchmark data.
+                </p>
+              </div>
+            </div>
+            <div id="suggested-question-list" class="suggested-question-list"></div>
+            <div class="ask-benchmark-form">
+              <textarea
+                id="benchmark-question-input"
+                class="benchmark-question-input"
+                placeholder="Example: Why did C# win overall, and what does that mean for enterprise systems?"
+              ></textarea>
+              <button id="ask-benchmark-button" class="ghost-button" type="button">Ask the Benchmark</button>
+            </div>
+            <div id="ask-benchmark-response" class="ask-benchmark-response hidden">
+              <p id="benchmark-answer-intent" class="answer-intent-label"></p>
+              <p id="benchmark-answer-text" class="benchmark-answer-text"></p>
+              <div>
+                <p class="answer-evidence-title">Evidence used</p>
+                <ul id="benchmark-answer-evidence" class="answer-evidence-list"></ul>
+              </div>
+            </div>
+          </div>
+          <p id="analysis-status" class="analysis-status">The current intelligence report is built from measured benchmark outputs and can be regenerated at any time.</p>
+          <div id="analysis-generated-at" class="analysis-freshness"></div>
+          <div class="ai-diagnostic-grid">
+            <article class="ai-highlight-card">
+              <p class="section-kicker">Executive Brief</p>
+              <p id="analysis-executive-summary" class="analysis-executive-summary"></p>
+            </article>
+            <article class="ai-highlight-card">
+              <p class="section-kicker">Signals</p>
+              <div id="analysis-warning-grid" class="analysis-warning-grid"></div>
+            </article>
+          </div>
+          <div class="ai-subsection">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="section-kicker">AI Findings</p>
+                <h3>Generated Intelligence Cards</h3>
+              </div>
+            </div>
+            <div id="analysis-findings-grid" class="analysis-findings-grid"></div>
+          </div>
+          <div class="ai-subsection">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="section-kicker">Category Analysis</p>
+                <h3>Complexity-Aware Runtime Reading</h3>
+              </div>
+            </div>
+            <div id="analysis-category-grid" class="analysis-category-grid"></div>
+          </div>
+          <div class="ai-subsection">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="section-kicker">Scenario Matrix</p>
+                <h3>Recommendation by Use Case</h3>
+              </div>
+            </div>
+            <div id="analysis-recommendation-grid" class="analysis-recommendation-grid"></div>
+          </div>
+          <div id="ai-summary" class="ai-summary prose-block"></div>
+        </section>
+      </main>
+
+      <div id="loading-state" class="overlay-state">Loading benchmark dashboard…</div>
+      <div id="error-state" class="overlay-state hidden"></div>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
