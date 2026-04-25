@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime
@@ -513,7 +513,7 @@ def render_analysis_markdown(
     recommendation_matrix: list[dict[str, Any]],
 ) -> str:
     lines = [
-        "# AI-Assisted Benchmark Analysis",
+        "# Dynamic Benchmark Intelligence Report",
         "",
         f"_Generated on {generated_at}_",
         "",
@@ -523,7 +523,7 @@ def render_analysis_markdown(
         "## Key Findings",
     ]
     for item in key_findings:
-        lines.append(f"- **{item['title']}**: {item['value']} — {item['detail']}")
+        lines.append(f"- **{item['title']}**: {item['value']} - {item['detail']}")
 
     lines.extend(["", "## Warnings and Signals"])
     for item in warnings:
@@ -545,7 +545,7 @@ def render_analysis_markdown(
 
     lines.extend(["", "## Scenario Recommendations"])
     for item in recommendation_matrix:
-        lines.append(f"- **{item['scenario']}**: {label_for_method(item['method'])} — {item['reason']}")
+        lines.append(f"- **{item['scenario']}**: {label_for_method(item['method'])} - {item['reason']}")
     return "\n".join(lines)
 
 
@@ -586,3 +586,4 @@ def generate_analysis_pdf(overview: dict[str, Any], analysis: dict[str, Any]) ->
             input_path.unlink()
         if output_path.exists():
             output_path.unlink()
+

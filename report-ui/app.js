@@ -1,4 +1,4 @@
-const methodStyles = {
+﻿const methodStyles = {
   csharp_engine: { label: "C# Engine", className: "method-csharp", color: "#ff8f3f" },
   sql_dynamic: { label: "SQL Dynamic", className: "method-sql", color: "#2dc0b2" },
   python_eval: { label: "Python Eval", className: "method-python", color: "#8ab4ff" },
@@ -13,9 +13,19 @@ const tradeoffLabels = [
 
 const STATIC_DASHBOARD_URL = "data/dashboard.json";
 const STATIC_PDF_URL = "assets/benchmark-ai-analysis.pdf";
+const SECTION_IDS = [
+  "overview-section",
+  "correctness-section",
+  "performance-section",
+  "formula-section",
+  "tradeoff-section",
+  "recommendation-section",
+  "intelligence-section",
+];
 
 let dashboardPayload = null;
 let isStaticMode = false;
+let activeSectionId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh-button").addEventListener("click", loadDashboard);
@@ -24,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("formula-filter").addEventListener("change", () => {
     renderFormulaSection();
   });
+  initializeSectionNavigation();
+  initializeBackToTop();
   loadDashboard();
 });
 
@@ -85,7 +97,6 @@ function renderDashboard(payload) {
 function renderOverviewMetrics(overview, summary) {
   const summaryByMethod = Object.fromEntries(summary.map((row) => [row.method, row]));
   const csharpAvg = summaryByMethod.csharp_engine?.average_runtime_seconds ?? 0;
-  const sqlAvg = summaryByMethod.sql_dynamic?.average_runtime_seconds ?? 0;
   const pythonAvg = summaryByMethod.python_eval?.average_runtime_seconds ?? 0;
   const performanceGap = pythonAvg - csharpAvg;
 
@@ -526,7 +537,7 @@ function groupLogsByFormula(logs) {
 }
 
 function labelForMethod(method) {
-  return methodStyles[method]?.label ?? method ?? "—";
+  return methodStyles[method]?.label ?? method ?? "-";
 }
 
 function formatCompactNumber(value) {
@@ -601,6 +612,79 @@ function setAnalysisStatus(message, isError = false) {
   const target = document.getElementById("analysis-status");
   target.textContent = message;
   target.classList.toggle("analysis-status-error", isError);
+}
+
+function initializeSectionNavigation() {
+  const buttons = document.querySelectorAll("[data-target]");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetId = button.dataset.target || "";
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      setVisibleSection(targetId);
+      window.requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      if (location.hash !== `#${targetId}`) {
+        history.replaceState(null, "", `#${targetId}`);
+      }
+    });
+  });
+
+  const initialTarget = window.location.hash.replace("#", "");
+  if (SECTION_IDS.includes(initialTarget)) {
+    setVisibleSection(initialTarget);
+  } else {
+    setVisibleSection(null);
+  }
+
+  window.addEventListener("hashchange", () => {
+    const hashTarget = window.location.hash.replace("#", "");
+    if (!SECTION_IDS.includes(hashTarget)) return;
+    setVisibleSection(hashTarget);
+    document.getElementById(hashTarget)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function setVisibleSection(activeId) {
+  activeSectionId = SECTION_IDS.includes(activeId) ? activeId : null;
+
+  SECTION_IDS.forEach((id) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const isVisible = id === activeSectionId;
+    section.classList.toggle("section-hidden", !isVisible);
+    section.classList.toggle("section-visible", isVisible);
+  });
+
+  document.getElementById("back-to-top-button")?.classList.toggle(
+    "hidden",
+    !activeSectionId || window.scrollY < 320
+  );
+
+  document.querySelector(".dashboard-grid")?.classList.toggle("has-visible-section", Boolean(activeSectionId));
+  updateActiveNav(activeSectionId);
+}
+
+function updateActiveNav(activeId) {
+  document.querySelectorAll(".hero-nav-pill").forEach((button) => {
+    button.classList.toggle("active", button.dataset.target === activeId);
+  });
+}
+
+function initializeBackToTop() {
+  const button = document.getElementById("back-to-top-button");
+  button.addEventListener("click", () => {
+    setVisibleSection(null);
+    history.replaceState(null, "", location.pathname);
+    document.getElementById("top")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  window.addEventListener("scroll", () => {
+    button.classList.toggle("hidden", !activeSectionId || window.scrollY < 320);
+  });
 }
 
 function buildLocalAiAnalysis(payload) {
@@ -887,7 +971,7 @@ function detectQuestionIntentLocal(question) {
 
 function renderLocalAnalysisMarkdown(generatedAt, executiveSummary, keyFindings, warnings, categoryMatrix, winners, recommendationMatrix) {
   const lines = [
-    "# AI-Assisted Benchmark Analysis",
+    "# Dynamic Benchmark Intelligence Report",
     "",
     `_Generated on ${generatedAt}_`,
     "",
@@ -896,7 +980,7 @@ function renderLocalAnalysisMarkdown(generatedAt, executiveSummary, keyFindings,
     "",
     "## Key Findings",
   ];
-  keyFindings.forEach((item) => lines.push(`- **${item.title}**: ${item.value} — ${item.detail}`));
+  keyFindings.forEach((item) => lines.push(`- **${item.title}**: ${item.value} - ${item.detail}`));
   lines.push("", "## Warnings and Signals");
   warnings.forEach((item) => lines.push(`- **${item.title}**: ${item.detail}`));
   lines.push("", "## Category-Level Winners");
@@ -909,7 +993,7 @@ function renderLocalAnalysisMarkdown(generatedAt, executiveSummary, keyFindings,
   });
   lines.push("", "## Scenario Recommendations");
   recommendationMatrix.forEach((item) => {
-    lines.push(`- **${item.scenario}**: ${labelForMethod(item.method)} — ${item.reason}`);
+    lines.push(`- **${item.scenario}**: ${labelForMethod(item.method)} - ${item.reason}`);
   });
   return lines.join("\n");
 }
@@ -930,3 +1014,8 @@ function formatTimestamp(date) {
   const seconds = String(date.getSeconds()).padStart(2, "0");
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+
+
+
+

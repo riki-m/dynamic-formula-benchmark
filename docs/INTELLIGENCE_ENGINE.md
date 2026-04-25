@@ -1,4 +1,4 @@
-# Dynamic Intelligence Engine
+﻿# Dynamic Intelligence Engine
 
 ## Purpose
 
@@ -62,3 +62,4 @@ This design remains fully compliant because:
 - [intelligence_summary.md](C:/Users/Mitelman/Documents/Codex/dynamic-formula-benchmark/report/intelligence_summary.md)
 - [analysis_engine.py](C:/Users/Mitelman/Documents/Codex/dynamic-formula-benchmark/report-api/app/analysis_engine.py)
 - [pdf_report_builder.py](C:/Users/Mitelman/Documents/Codex/dynamic-formula-benchmark/report-api/app/pdf_report_builder.py)
+

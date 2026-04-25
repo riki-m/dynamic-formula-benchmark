@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import sys
@@ -31,7 +31,7 @@ def build_pdf(payload: dict, output_path: Path) -> None:
         bottomMargin=16 * mm,
         leftMargin=16 * mm,
         rightMargin=16 * mm,
-        title="Dynamic Formula Benchmark AI Report",
+        title="Dynamic Formula Benchmark Intelligence Report",
     )
 
     styles = getSampleStyleSheet()
@@ -82,7 +82,7 @@ def build_pdf(payload: dict, output_path: Path) -> None:
     story.append(Paragraph("Dynamic Formula Intelligence Report", title_style))
     story.append(
         Paragraph(
-            f"AI-assisted benchmark analysis generated from measured SQL Server results on {analysis['generated_at']}.",
+            f"Dynamic Benchmark Intelligence Report generated from measured SQL Server results on {analysis['generated_at']}.",
             subtitle_style,
         )
     )
@@ -127,7 +127,7 @@ def build_pdf(payload: dict, output_path: Path) -> None:
     for item in analysis["correctness_cards"]:
         story.append(
             Paragraph(
-                f"• {item['label']}: mismatched_rows = {item['mismatched_rows']}",
+                f"- {item['label']}: mismatched_rows = {item['mismatched_rows']}",
                 bullet_style,
             )
         )
@@ -164,11 +164,11 @@ def build_pdf(payload: dict, output_path: Path) -> None:
 
     story.append(Paragraph("Key Findings", section_style))
     for item in analysis["key_findings"]:
-        story.append(Paragraph(f"• <b>{item['title']}</b>: {item['detail']}", bullet_style))
+        story.append(Paragraph(f"- <b>{item['title']}</b>: {item['detail']}", bullet_style))
 
     story.append(Paragraph("Warnings and Signals", section_style))
     for item in analysis["warnings"]:
-        story.append(Paragraph(f"• <b>{item['title']}</b>: {item['detail']}", bullet_style))
+        story.append(Paragraph(f"- <b>{item['title']}</b>: {item['detail']}", bullet_style))
 
     story.append(Paragraph("Formula-Level Winners", section_style))
     winners_data = [["Formula", "Category", "Winner", "Runtime (s)", "Margin (s)"]]
@@ -202,12 +202,12 @@ def build_pdf(payload: dict, output_path: Path) -> None:
     for item in analysis["recommendation_matrix"]:
         story.append(
             Paragraph(
-                f"• <b>{item['scenario']}</b>: {label_for_method(item['method'])} — {item['reason']}",
+                f"- <b>{item['scenario']}</b>: {label_for_method(item['method'])} - {item['reason']}",
                 bullet_style,
             )
         )
 
-    story.append(Paragraph("AI-Assisted Interpretation Layer", section_style))
+    story.append(Paragraph("Dynamic Intelligence Interpretation Layer", section_style))
     story.append(
         Paragraph(
             "This report was generated locally from measured benchmark data. It does not replace Python, C#, or SQL execution, and it does not claim live cloud LLM inference. Its value is in dynamic interpretation, ranking, warning detection, and report-quality narrative generation.",
@@ -227,3 +227,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+

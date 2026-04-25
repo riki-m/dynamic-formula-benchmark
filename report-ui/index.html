@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,7 +9,22 @@
   </head>
   <body>
     <div class="page-shell">
-      <header class="hero-section">
+      <nav class="hero-top-nav" aria-label="Primary section navigation">
+        <div class="hero-top-nav-brand">
+          <span class="hero-top-nav-kicker">Dynamic Formula Benchmark</span>
+          <strong>Navigate the benchmark</strong>
+        </div>
+        <div class="hero-nav-pills">
+          <button class="hero-nav-pill" type="button" data-target="overview-section">Overview</button>
+          <button class="hero-nav-pill" type="button" data-target="correctness-section">Correctness</button>
+          <button class="hero-nav-pill" type="button" data-target="performance-section">Performance</button>
+          <button class="hero-nav-pill" type="button" data-target="formula-section">Formula Analysis</button>
+          <button class="hero-nav-pill" type="button" data-target="tradeoff-section">Trade-Offs</button>
+          <button class="hero-nav-pill" type="button" data-target="recommendation-section">Recommendation</button>
+          <button class="hero-nav-pill hero-nav-pill-strong" type="button" data-target="intelligence-section">Intelligence Report</button>
+        </div>
+      </nav>
+      <header class="hero-section" id="top">
         <div class="hero-copy">
           <p class="eyebrow">Formula Intelligence Control Center</p>
           <h1 id="project-title">Dynamic Formula Benchmark</h1>
@@ -19,6 +34,8 @@
             <span class="hero-tag">1M Records</span>
             <span class="hero-tag">3 Execution Engines</span>
           </div>
+
+
         </div>
         <div class="hero-orbital-card">
           <div class="orbital-card-header">
@@ -27,15 +44,15 @@
           </div>
           <div class="orbital-metrics">
             <div>
-              <strong id="fastest-method">—</strong>
+              <strong id="fastest-method">-</strong>
               <span>Fastest Overall</span>
             </div>
             <div>
-              <strong id="formula-count">—</strong>
+              <strong id="formula-count">-</strong>
               <span>Formulas Benchmarked</span>
             </div>
             <div>
-              <strong id="record-count">—</strong>
+              <strong id="record-count">-</strong>
               <span>Records per Formula</span>
             </div>
           </div>
@@ -43,7 +60,7 @@
       </header>
 
       <main class="dashboard-grid">
-        <section class="section-card spotlight-card" aria-labelledby="overview-heading">
+        <section id="overview-section" class="section-card spotlight-card section-hidden" aria-labelledby="overview-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Overview</p>
@@ -54,7 +71,7 @@
           <div id="overview-metrics" class="metrics-grid"></div>
         </section>
 
-        <section class="section-card correctness-card" aria-labelledby="correctness-heading">
+        <section id="correctness-section" class="section-card correctness-card section-hidden" aria-labelledby="correctness-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Validation</p>
@@ -64,7 +81,7 @@
           <div id="correctness-grid" class="correctness-grid"></div>
         </section>
 
-        <section class="section-card performance-card" aria-labelledby="performance-heading">
+        <section id="performance-section" class="section-card performance-card section-hidden" aria-labelledby="performance-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Latency</p>
@@ -88,7 +105,7 @@
           </div>
         </section>
 
-        <section class="section-card formula-card" aria-labelledby="formula-heading">
+        <section id="formula-section" class="section-card formula-card section-hidden" aria-labelledby="formula-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Per Formula</p>
@@ -116,7 +133,7 @@
           </div>
         </section>
 
-        <section class="section-card tradeoff-card" aria-labelledby="tradeoff-heading">
+        <section id="tradeoff-section" class="section-card tradeoff-card section-hidden" aria-labelledby="tradeoff-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Architecture</p>
@@ -129,7 +146,7 @@
           <div id="tradeoff-grid" class="tradeoff-grid"></div>
         </section>
 
-        <section class="section-card recommendation-card" aria-labelledby="recommendation-heading">
+        <section id="recommendation-section" class="section-card recommendation-card section-hidden" aria-labelledby="recommendation-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Decision Layer</p>
@@ -139,7 +156,7 @@
           <div id="recommendation-grid" class="recommendation-grid"></div>
         </section>
 
-        <section class="section-card ai-card" aria-labelledby="ai-heading">
+        <section id="intelligence-section" class="section-card ai-card section-hidden" aria-labelledby="ai-heading">
           <div class="section-heading">
             <div>
               <p class="section-kicker">Intelligence Engine</p>
@@ -227,10 +244,15 @@
         </section>
       </main>
 
-      <div id="loading-state" class="overlay-state">Loading benchmark dashboard…</div>
+      <button id="back-to-top-button" class="back-to-top hidden" type="button" aria-label="Back to top">Back to top</button>
+      <div id="loading-state" class="overlay-state">Loading benchmark dashboard...</div>
       <div id="error-state" class="overlay-state hidden"></div>
     </div>
 
     <script src="app.js" defer></script>
   </body>
 </html>
+
+
+
+

@@ -1,27 +1,11 @@
-# Recommended Project Structure
+﻿# Repository Structure
+
+This document mirrors the current repository layout and explains where each required submission artifact is located.
+
+## Current Structure
 
 ```text
 dynamic-formula-benchmark/
-|-- README.md
-|-- requirements.txt
-|-- .gitignore
-|-- .github/
-|   `-- workflows/
-|       `-- deploy-pages.yml
-|-- database/
-|   |-- 01_schema.sql
-|   |-- 02_seed_formulas.sql
-|   |-- 04_seed_data_sqlserver.sql
-|   `-- 05_compare_methods.sql
-|-- python-solution/
-|   |-- scripts/
-|   |   |-- seed_data.py
-|   |   |-- run_python_eval.py
-|   |   `-- compare_results.py
-|   `-- src/
-|       |-- config.py
-|       |-- db.py
-|       `-- formula_runtime.py
 |-- csharp-solution/
 |   |-- DynamicFormulaBenchmark.sln
 |   `-- DynamicFormulaBenchmark/
@@ -32,91 +16,95 @@ dynamic-formula-benchmark/
 |       `-- Models/
 |           |-- FormulaDefinition.cs
 |           `-- DataRecord.cs
-|-- sql-solution/
-|   |-- 03_dynamic_sql.sql
-|   `-- README.md
+|-- database/
+|   |-- 01_schema.sql
+|   |-- 02_seed_formulas.sql
+|   |-- 04_seed_data_sqlserver.sql
+|   `-- 05_compare_methods.sql
 |-- docs/
 |   |-- FORMULA_EVALUATION.md
 |   |-- INTELLIGENCE_ENGINE.md
 |   `-- SQL_SERVER_RUNBOOK.md
+|-- python-solution/
+|   |-- scripts/
+|   |   |-- seed_data.py
+|   |   |-- run_python_eval.py
+|   |   `-- compare_results.py
+|   `-- src/
+|       |-- config.py
+|       |-- db.py
+|       `-- formula_runtime.py
+|-- report/
+|   |-- benchmark-ai-analysis.pdf
+|   |-- intelligence_summary.md
+|   |-- summary.md
+|   `-- screenshots/
+|       |-- t_data.jpg
+|       |-- t_targil.jpg
+|       |-- t_results.jpg
+|       `-- t_log.jpg
 |-- report-api/
 |   |-- app/
-|   |   `-- main.py
+|   |   |-- analysis_engine.py
+|   |   |-- main.py
+|   |   `-- pdf_report_builder.py
 |   `-- export_public_snapshot.py
 |-- report-ui/
-|   |-- index.html
-|   |-- styles.css
-|   |-- app.js
+|   |-- assets/
+|   |   `-- benchmark-ai-analysis.pdf
 |   |-- data/
 |   |   `-- dashboard.json
-|   `-- assets/
-|       `-- benchmark-ai-analysis.pdf
-`-- report/
-    |-- summary.md
-    `-- screenshots/
+|   |-- .nojekyll
+|   |-- app.js
+|   |-- index.html
+|   `-- styles.css
+|-- sql-solution/
+|   |-- 03_dynamic_sql.sql
+|   `-- README.md
+|-- .gitignore
+|-- index.html
+|-- PROJECT_PLAN.md
+|-- README.md
+|-- REPOSITORY_STRUCTURE.md
+`-- requirements.txt
 ```
 
-## Folder Responsibility
+## Folder Responsibilities
 
 ### `database`
 
-Contains the shared schema, seed scripts, and comparison scripts.
+Contains the shared schema, formula seed scripts, large-scale SQL Server data seed script, and the correctness comparison query.
 
 ### `python-solution`
 
-Contains the first full implementation:
-
-- data generation
-- runtime evaluation via `eval`
-- result comparison
+Contains the Python implementation for dynamic formula execution, including data seeding, runtime evaluation through `eval()`, and comparison utilities.
 
 ### `csharp-solution`
 
-Contains the .NET implementation that reads the same tables and writes the same result format.
+Contains the .NET implementation that reads the same formulas and data contract and writes results in the same benchmark structure.
 
 ### `sql-solution`
 
-Contains the third required execution implementation:
-
-- SQL Server dynamic execution
-- stored procedure creation script
-- dedicated SQL solution documentation
+Contains the SQL Server dynamic execution implementation and its supporting documentation.
 
 ### `docs`
 
-Contains technical explanations that support the submission, especially how formula strings are converted into executable runtime expressions.
-
-### `report-api`
-
-Contains the local API layer and the snapshot export utility used to build the free public GitHub Pages version.
-
-### `report-ui`
-
-Contains the final responsive dashboard that visualizes:
-
-- correctness validation
-- performance comparison
-- per-formula runtime analysis
-- architectural trade-offs
-- final recommendation
-- AI-assisted benchmark interpretation
-- public static snapshot assets for GitHub Pages
-
-### `.github/workflows`
-
-Contains the GitHub Actions workflow that deploys the static showcase dashboard to GitHub Pages.
+Contains supporting technical explanations for formula translation, SQL Server execution order, and the local intelligence layer.
 
 ### `report`
 
-Contains the final benchmark summary, the persisted intelligence summary, and screenshots for submission.
+Contains the final summary artifacts required for submission:
 
-## Recommended README Sections
+- `summary.md` for the written benchmark conclusion
+- `intelligence_summary.md` for the analytical interpretation layer
+- `benchmark-ai-analysis.pdf` for the generated technical report
+- `screenshots/` for database evidence images
 
-1. Project overview
-2. Problem statement
-3. Technologies
-4. Project structure
-5. How to run
-6. Benchmark methods
-7. Results
-8. Conclusion
+### `report-api`
+
+Contains the FastAPI layer, the local benchmark intelligence logic, the PDF builder, and the snapshot exporter used for the static public website.
+
+### `report-ui`
+
+Contains the responsive benchmark dashboard UI and the public static snapshot assets used by GitHub Pages.
+

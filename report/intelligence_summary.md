@@ -1,4 +1,4 @@
-# AI-Assisted Benchmark Analysis
+﻿# Dynamic Benchmark Intelligence Report
 
 _Generated on 2026-04-25 21:30:32_
 
@@ -6,10 +6,10 @@ _Generated on 2026-04-25 21:30:32_
 This analysis was generated directly from measured benchmark logs over 1,000,000 records and 11 formulas. C# Engine delivered the strongest overall runtime profile, while SQL Dynamic showed the most stable timing behavior. The performance spread between the fastest and slowest engine reached 38.969s per formula, which makes execution architecture a meaningful production decision.
 
 ## Key Findings
-- **Fastest Overall**: C# Engine — C# Engine achieved the lowest average runtime at 22.618s per formula, beating Python Eval by 38.969s.
-- **Most Stable Runtime**: SQL Dynamic — Runtime variance stayed lowest for SQL Dynamic, with a standard deviation of 2.760s.
-- **Closest Race**: Formula 10 — C# Engine won this formula by only 7.866s.
-- **Largest Advantage**: Formula 4 — C# Engine created the widest gap here at 16.333s.
+- **Fastest Overall**: C# Engine - C# Engine achieved the lowest average runtime at 22.618s per formula, beating Python Eval by 38.969s.
+- **Most Stable Runtime**: SQL Dynamic - Runtime variance stayed lowest for SQL Dynamic, with a standard deviation of 2.760s.
+- **Closest Race**: Formula 10 - C# Engine won this formula by only 7.866s.
+- **Largest Advantage**: Formula 4 - C# Engine created the widest gap here at 16.333s.
 
 ## Warnings and Signals
 - **Large performance spread**: The slowest engine is more than 2x slower than the fastest one, so architecture choice materially affects latency.
@@ -34,6 +34,7 @@ This analysis was generated directly from measured benchmark logs over 1,000,000
 - Formula 11 (Conditional): C# Engine won at 22.871s with a 14.465s lead.
 
 ## Scenario Recommendations
-- **Best overall production choice**: C# Engine — This engine delivered the strongest benchmark profile on the measured workload.
-- **Best for rapid prototyping**: Python Eval — The simplest formula-to-execution path with minimal implementation ceremony.
-- **Best for DB-centric deployment**: SQL Dynamic — Keeps execution close to the data and avoids repeated application-side transfer work.
+- **Best overall production choice**: C# Engine - This engine delivered the strongest benchmark profile on the measured workload.
+- **Best for rapid prototyping**: Python Eval - The simplest formula-to-execution path with minimal implementation ceremony.
+- **Best for DB-centric deployment**: SQL Dynamic - Keeps execution close to the data and avoids repeated application-side transfer work.
+
