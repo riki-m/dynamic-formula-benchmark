@@ -5,6 +5,9 @@ dynamic-formula-benchmark/
 |-- README.md
 |-- requirements.txt
 |-- .gitignore
+|-- .github/
+|   `-- workflows/
+|       `-- deploy-pages.yml
 |-- database/
 |   |-- 01_schema.sql
 |   |-- 02_seed_formulas.sql
@@ -37,12 +40,17 @@ dynamic-formula-benchmark/
 |   |-- INTELLIGENCE_ENGINE.md
 |   `-- SQL_SERVER_RUNBOOK.md
 |-- report-api/
-|   `-- app/
-|       `-- main.py
+|   |-- app/
+|   |   `-- main.py
+|   `-- export_public_snapshot.py
 |-- report-ui/
 |   |-- index.html
 |   |-- styles.css
-|   `-- app.js
+|   |-- app.js
+|   |-- data/
+|   |   `-- dashboard.json
+|   `-- assets/
+|       `-- benchmark-ai-analysis.pdf
 `-- report/
     |-- summary.md
     `-- screenshots/
@@ -80,7 +88,7 @@ Contains technical explanations that support the submission, especially how form
 
 ### `report-api`
 
-Contains a lightweight API layer that exposes `t_log` data for a dashboard.
+Contains the local API layer and the snapshot export utility used to build the free public GitHub Pages version.
 
 ### `report-ui`
 
@@ -92,6 +100,11 @@ Contains the final responsive dashboard that visualizes:
 - architectural trade-offs
 - final recommendation
 - AI-assisted benchmark interpretation
+- public static snapshot assets for GitHub Pages
+
+### `.github/workflows`
+
+Contains the GitHub Actions workflow that deploys the static showcase dashboard to GitHub Pages.
 
 ### `report`
 

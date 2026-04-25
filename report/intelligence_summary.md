@@ -1,6 +1,6 @@
 # AI-Assisted Benchmark Analysis
 
-_Generated on 2026-04-24 15:18:29_
+_Generated on 2026-04-25 21:30:32_
 
 ## Executive Summary
 This analysis was generated directly from measured benchmark logs over 1,000,000 records and 11 formulas. C# Engine delivered the strongest overall runtime profile, while SQL Dynamic showed the most stable timing behavior. The performance spread between the fastest and slowest engine reached 38.969s per formula, which makes execution architecture a meaningful production decision.

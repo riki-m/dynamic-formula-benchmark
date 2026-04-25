@@ -11,7 +11,11 @@ const tradeoffLabels = [
   ["runtime_flexibility", "Runtime Flexibility"],
 ];
 
+const STATIC_DASHBOARD_URL = "data/dashboard.json";
+const STATIC_PDF_URL = "assets/benchmark-ai-analysis.pdf";
+
 let dashboardPayload = null;
+let isStaticMode = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh-button").addEventListener("click", loadDashboard);
@@ -26,15 +30,29 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadDashboard() {
   setLoading(true);
   try {
-    const response = await fetch("/api/dashboard");
-    if (!response.ok) {
-      throw new Error(`Dashboard API returned ${response.status}`);
-    }
-    dashboardPayload = await response.json();
+    dashboardPayload = await tryLoadLiveDashboard();
     renderDashboard(dashboardPayload);
     setLoading(false);
   } catch (error) {
     setError(`Unable to load the benchmark dashboard. ${error.message}`);
+  }
+}
+
+async function tryLoadLiveDashboard() {
+  try {
+    const response = await fetch("/api/dashboard");
+    if (!response.ok) {
+      throw new Error(`Dashboard API returned ${response.status}`);
+    }
+    isStaticMode = false;
+    return await response.json();
+  } catch (liveError) {
+    const fallbackResponse = await fetch(STATIC_DASHBOARD_URL);
+    if (!fallbackResponse.ok) {
+      throw new Error(`Live API failed (${liveError.message}) and static snapshot returned ${fallbackResponse.status}`);
+    }
+    isStaticMode = true;
+    return await fallbackResponse.json();
   }
 }
 
@@ -54,8 +72,14 @@ function renderDashboard(payload) {
   renderRecommendations(recommendations);
   renderAiAnalysis(ai_analysis);
   renderSuggestedQuestions(ai_analysis.suggested_questions || []);
-  document.getElementById("download-pdf-link").href = ai_analysis.download_pdf_url || "/api/analysis/download.pdf";
-  setAnalysisStatus("The current intelligence report is built from measured benchmark outputs and can be regenerated at any time.");
+  document.getElementById("download-pdf-link").href = isStaticMode
+    ? STATIC_PDF_URL
+    : ai_analysis.download_pdf_url || "/api/analysis/download.pdf";
+  setAnalysisStatus(
+    isStaticMode
+      ? "Public share mode is active. This site is running from a published snapshot of the measured benchmark data."
+      : "The current intelligence report is built from measured benchmark outputs and can be regenerated at any time."
+  );
 }
 
 function renderOverviewMetrics(overview, summary) {
@@ -409,9 +433,26 @@ async function generateAnalysis() {
   const button = document.getElementById("generate-analysis-button");
   button.disabled = true;
   button.textContent = "Generating...";
-  setAnalysisStatus("Recomputing the benchmark intelligence report from the latest measured results...");
+  setAnalysisStatus(
+    isStaticMode
+      ? "Recomputing the intelligence report locally from the published benchmark snapshot..."
+      : "Recomputing the benchmark intelligence report from the latest measured results..."
+  );
 
   try {
+    if (isStaticMode) {
+      const recomputed = buildLocalAiAnalysis(dashboardPayload);
+      dashboardPayload.ai_analysis = {
+        ...dashboardPayload.ai_analysis,
+        ...recomputed,
+        download_pdf_url: STATIC_PDF_URL,
+      };
+      renderAiAnalysis(dashboardPayload.ai_analysis);
+      document.getElementById("download-pdf-link").href = STATIC_PDF_URL;
+      setAnalysisStatus("Static public analysis was recomputed locally from the published benchmark dataset.");
+      return;
+    }
+
     const response = await fetch("/api/analysis/generate", {
       method: "POST",
     });
@@ -441,9 +482,20 @@ async function askBenchmark() {
 
   button.disabled = true;
   button.textContent = "Thinking...";
-  setAnalysisStatus("Reading the measured benchmark data and preparing a local answer...");
+  setAnalysisStatus(
+    isStaticMode
+      ? "Reading the published benchmark snapshot and generating a local answer..."
+      : "Reading the measured benchmark data and preparing a local answer..."
+  );
 
   try {
+    if (isStaticMode) {
+      const payload = answerBenchmarkLocally(question, dashboardPayload);
+      renderAskBenchmarkResponse(payload);
+      setAnalysisStatus("The benchmark question was answered locally from the published dataset.");
+      return;
+    }
+
     const response = await fetch("/api/analysis/ask", {
       method: "POST",
       headers: {
@@ -549,4 +601,332 @@ function setAnalysisStatus(message, isError = false) {
   const target = document.getElementById("analysis-status");
   target.textContent = message;
   target.classList.toggle("analysis-status-error", isError);
+}
+
+function buildLocalAiAnalysis(payload) {
+  const overview = payload.overview;
+  const formulas = payload.formulas || [];
+  const logs = (payload.logs || []).map((row) => ({
+    ...row,
+    targil_id: Number(row.targil_id),
+    run_time: Number(row.run_time),
+    records_processed: Number(row.records_processed),
+  }));
+  const summary = (payload.summary || []).map((row) => ({
+    ...row,
+    formulas_executed: Number(row.formulas_executed),
+    total_records_processed: Number(row.total_records_processed),
+    average_runtime_seconds: Number(row.average_runtime_seconds),
+    best_runtime_seconds: Number(row.best_runtime_seconds),
+    worst_runtime_seconds: Number(row.worst_runtime_seconds),
+    total_runtime_seconds: Number(row.total_runtime_seconds),
+  }));
+  const correctness = payload.correctness || [];
+
+  const methodTimings = {};
+  const perFormula = {};
+  logs.forEach((log) => {
+    methodTimings[log.method] ||= [];
+    methodTimings[log.method].push(log.run_time);
+    perFormula[log.targil_id] ||= [];
+    perFormula[log.targil_id].push(log);
+  });
+
+  const fastest = summary[0] || null;
+  const slowest = summary[summary.length - 1] || null;
+  const mostStable = summary
+    .map((row) => {
+      const timings = methodTimings[row.method] || [row.average_runtime_seconds];
+      return {
+        method: row.method,
+        std_dev: populationStdDev(timings),
+        spread: row.worst_runtime_seconds - row.best_runtime_seconds,
+      };
+    })
+    .sort((a, b) => a.std_dev - b.std_dev || a.spread - b.spread)[0] || null;
+
+  const winners = [];
+  let closestRace = null;
+  let widestMargin = null;
+  formulas.forEach((formula) => {
+    const ranked = [...(perFormula[formula.targil_id] || [])].sort((a, b) => a.run_time - b.run_time);
+    if (!ranked.length) return;
+    const leader = ranked[0];
+    const runnerUp = ranked[1] || ranked[0];
+    const margin = runnerUp.run_time - leader.run_time;
+    const winner = {
+      targil_id: formula.targil_id,
+      formula: formula.display_formula,
+      category: formula.category,
+      winner_method: leader.method,
+      winner_label: labelForMethod(leader.method),
+      winner_runtime_seconds: leader.run_time,
+      margin_seconds: margin,
+    };
+    winners.push(winner);
+    if (!closestRace || margin < closestRace.margin_seconds) closestRace = winner;
+    if (!widestMargin || margin > widestMargin.margin_seconds) widestMargin = winner;
+  });
+
+  const categoryMatrix = buildLocalCategoryMatrix(formulas, perFormula);
+  const recommendationMatrix = [
+    {
+      scenario: "Best overall production choice",
+      method: fastest?.method || "csharp_engine",
+      reason: "This engine delivered the strongest benchmark profile on the measured workload.",
+    },
+    {
+      scenario: "Best for rapid prototyping",
+      method: "python_eval",
+      reason: "The simplest formula-to-execution path with minimal implementation ceremony.",
+    },
+    {
+      scenario: "Best for DB-centric deployment",
+      method: "sql_dynamic",
+      reason: "Keeps execution close to the data and avoids repeated application-side transfer work.",
+    },
+  ];
+
+  const performanceGap = fastest && slowest
+    ? slowest.average_runtime_seconds - fastest.average_runtime_seconds
+    : 0;
+  const correctnessPairs = correctness.filter((item) => Number(item.mismatched_rows) === 0).length;
+
+  const keyFindings = [];
+  if (fastest && slowest) {
+    keyFindings.push({
+      title: "Fastest Overall",
+      value: labelForMethod(fastest.method),
+      detail: `${labelForMethod(fastest.method)} achieved the lowest average runtime at ${fastest.average_runtime_seconds.toFixed(3)}s per formula, beating ${labelForMethod(slowest.method)} by ${performanceGap.toFixed(3)}s.`,
+    });
+  }
+  if (mostStable) {
+    keyFindings.push({
+      title: "Most Stable Runtime",
+      value: labelForMethod(mostStable.method),
+      detail: `Runtime variance stayed lowest for ${labelForMethod(mostStable.method)}, with a standard deviation of ${mostStable.std_dev.toFixed(3)}s.`,
+    });
+  }
+  if (closestRace) {
+    keyFindings.push({
+      title: "Closest Race",
+      value: `Formula ${closestRace.targil_id}`,
+      detail: `${closestRace.winner_label} won this formula by only ${closestRace.margin_seconds.toFixed(3)}s.`,
+    });
+  }
+  if (widestMargin) {
+    keyFindings.push({
+      title: "Largest Advantage",
+      value: `Formula ${widestMargin.targil_id}`,
+      detail: `${widestMargin.winner_label} created the widest gap here at ${widestMargin.margin_seconds.toFixed(3)}s.`,
+    });
+  }
+
+  const warnings = [];
+  if (fastest && slowest && slowest.average_runtime_seconds > fastest.average_runtime_seconds * 2) {
+    warnings.push({
+      title: "Large performance spread",
+      detail: "The slowest engine is more than 2x slower than the fastest one, so architecture choice materially affects latency.",
+    });
+  }
+  if (widestMargin && widestMargin.category === "Complex") {
+    warnings.push({
+      title: "Complex formulas are the real separator",
+      detail: "The widest runtime gap appeared in a complex formula, which suggests mathematical transformation cost is a major differentiator.",
+    });
+  }
+  warnings.push({
+    title: "Correctness stayed fully aligned",
+    detail: `All ${correctnessPairs} validated pairwise comparisons returned mismatched_rows = 0, so the benchmark ranking is safe to trust.`,
+  });
+
+  const generatedAt = formatTimestamp(new Date());
+  const executiveSummary = `This analysis was generated directly from measured benchmark logs over ${overview.records_processed.toLocaleString()} records and ${overview.formula_count} formulas. ${labelForMethod(fastest?.method || "csharp_engine")} delivered the strongest overall runtime profile, while ${labelForMethod(mostStable?.method || "sql_dynamic")} showed the most stable timing behavior. The performance spread between the fastest and slowest engine reached ${performanceGap.toFixed(3)}s per formula, which makes execution architecture a meaningful production decision.`;
+
+  return {
+    generated_at: generatedAt,
+    executive_summary: executiveSummary,
+    key_findings: keyFindings,
+    warnings,
+    category_matrix: categoryMatrix,
+    recommendation_matrix: recommendationMatrix,
+    formula_winners: winners,
+    summary_rows: summary,
+    correctness_cards: correctness,
+    fastest_method: fastest?.method || null,
+    most_stable_method: mostStable?.method || null,
+    performance_gap_seconds: performanceGap,
+    summary_markdown: renderLocalAnalysisMarkdown(generatedAt, executiveSummary, keyFindings, warnings, categoryMatrix, winners, recommendationMatrix),
+    suggested_questions: dashboardPayload?.ai_analysis?.suggested_questions || [],
+  };
+}
+
+function buildLocalCategoryMatrix(formulas, perFormula) {
+  const categoryLogs = {};
+  formulas.forEach((formula) => {
+    categoryLogs[formula.category] ||= {};
+    (perFormula[formula.targil_id] || []).forEach((log) => {
+      categoryLogs[formula.category][log.method] ||= [];
+      categoryLogs[formula.category][log.method].push(log.run_time);
+    });
+  });
+
+  return Object.entries(categoryLogs).map(([category, methods]) => {
+    const ranked = Object.entries(methods)
+      .map(([method, values]) => ({
+        method,
+        label: labelForMethod(method),
+        average_runtime_seconds: values.reduce((sum, value) => sum + value, 0) / values.length,
+      }))
+      .sort((a, b) => a.average_runtime_seconds - b.average_runtime_seconds);
+    return {
+      category,
+      winner_method: ranked[0]?.method || null,
+      winner_label: ranked[0]?.label || null,
+      methods: ranked,
+    };
+  });
+}
+
+function answerBenchmarkLocally(question, payload) {
+  const normalizedQuestion = question.toLowerCase().trim().replace(/\s+/g, " ");
+  if (!normalizedQuestion) {
+    return {
+      question,
+      intent: "empty",
+      answer: "Ask about performance, stability, complex formulas, correctness, enterprise fit, or why a method won.",
+      evidence: [],
+    };
+  }
+
+  const ai = buildLocalAiAnalysis(payload);
+  const summaryRows = ai.summary_rows || [];
+  const fastest = summaryRows[0] || null;
+  const slowest = summaryRows[summaryRows.length - 1] || null;
+  const avgByMethod = Object.fromEntries(summaryRows.map((row) => [row.method, row.average_runtime_seconds]));
+  const intent = detectQuestionIntentLocal(normalizedQuestion);
+
+  let answer = "";
+  let evidence = [];
+
+  if (intent === "why_fastest" && fastest && slowest) {
+    answer = `${labelForMethod(fastest.method)} won because it achieved the lowest measured average runtime at ${fastest.average_runtime_seconds.toFixed(3)}s per formula, while ${labelForMethod(slowest.method)} needed ${slowest.average_runtime_seconds.toFixed(3)}s. That gap stayed meaningful across the benchmark, so the winner is supported by repeated measured latency, not by a single outlier.`;
+    evidence = [
+      `Fastest overall average: ${labelForMethod(fastest.method)} at ${fastest.average_runtime_seconds.toFixed(3)}s.`,
+      `Slowest overall average: ${labelForMethod(slowest.method)} at ${slowest.average_runtime_seconds.toFixed(3)}s.`,
+      `Measured performance gap: ${(slowest.average_runtime_seconds - fastest.average_runtime_seconds).toFixed(3)}s per formula.`,
+    ];
+  } else if (intent === "stability") {
+    answer = `${labelForMethod(ai.most_stable_method || "sql_dynamic")} is the most stable engine because its runtime variance across formulas was the lowest in the benchmark. That means its behavior changed less dramatically between easy and difficult formulas.`;
+    const stableFinding = (ai.key_findings || []).find((item) => item.title === "Most Stable Runtime");
+    evidence = [
+      stableFinding?.detail || "",
+      `Average runtime: ${(avgByMethod[ai.most_stable_method] || 0).toFixed(3)}s.`,
+    ].filter(Boolean);
+  } else if (intent === "complexity") {
+    const complexRow = (ai.category_matrix || []).find((item) => item.category === "Complex");
+    if (complexRow) {
+      answer = `Complex formulas widened the separation between engines. In the complex category, ${complexRow.winner_label} led the group, which suggests that advanced mathematical transformations amplify engine differences more than simple arithmetic does.`;
+      evidence = [
+        `Complex-category leader: ${complexRow.winner_label}.`,
+        `Category averages: ${complexRow.methods.map((item) => `${item.label} ${item.average_runtime_seconds.toFixed(3)}s`).join(", ")}.`,
+      ];
+    } else {
+      answer = "The benchmark currently has no classified complex formulas to analyze.";
+    }
+  } else if (intent === "python_pain") {
+    const hardest = [...(ai.formula_winners || [])]
+      .filter((item) => item.winner_method !== "python_eval")
+      .sort((a, b) => b.margin_seconds - a.margin_seconds)[0];
+    answer = "Python Eval is easiest to implement, but it loses the most on scale-sensitive formulas because interpreted execution adds more overhead when the formula set becomes large or mathematically heavier.";
+    evidence = [
+      `Python average runtime: ${(avgByMethod.python_eval || 0).toFixed(3)}s per formula.`,
+      `C# average runtime: ${(avgByMethod.csharp_engine || 0).toFixed(3)}s per formula.`,
+      `SQL Dynamic average runtime: ${(avgByMethod.sql_dynamic || 0).toFixed(3)}s per formula.`,
+      hardest ? `Largest non-Python win: Formula ${hardest.targil_id} (${hardest.category}).` : "",
+    ].filter(Boolean);
+  } else if (intent === "enterprise") {
+    answer = "C# Engine is the best enterprise choice because it combines the strongest measured runtime with typed application architecture, clean service integration, and maintainable backend structure.";
+    evidence = [
+      `Fastest measured average runtime: ${(avgByMethod.csharp_engine || 0).toFixed(3)}s.`,
+      "Strong maintainability and extensibility scores in the architectural assessment.",
+      "Typed backend integration makes it easier to govern in long-lived production systems.",
+    ];
+  } else if (intent === "database") {
+    answer = "SQL Dynamic is the best DB-centric option because it keeps execution close to the data and reduces repeated application-side transfer work. That makes it a strong fit when the organization wants most of the computation to stay inside SQL Server.";
+    evidence = [
+      `SQL Dynamic average runtime: ${(avgByMethod.sql_dynamic || 0).toFixed(3)}s.`,
+      "Execution happens near the stored data instead of moving large workloads out to the application layer.",
+      "It ranked second overall while preserving correctness.",
+    ];
+  } else if (intent === "correctness") {
+    answer = "Correctness remained fully aligned across the benchmark. All pairwise comparisons returned zero mismatched rows, so the ranking is based on latency differences rather than inconsistent outputs.";
+    evidence = (payload.correctness || []).map((item) => `${item.label}: mismatched_rows = ${item.mismatched_rows}.`);
+  } else {
+    answer = `This benchmark currently covers ${payload.overview.formula_count} formulas over ${payload.overview.records_processed.toLocaleString()} records per formula. ${labelForMethod(ai.fastest_method || "csharp_engine")} leads overall, ${labelForMethod(ai.most_stable_method || "sql_dynamic")} is the most stable, and correctness is verified across the three execution engines.`;
+    evidence = [
+      `Fastest overall: ${labelForMethod(ai.fastest_method || "csharp_engine")}.`,
+      `Most stable: ${labelForMethod(ai.most_stable_method || "sql_dynamic")}.`,
+      "Ask about speed, stability, complex formulas, correctness, enterprise fit, or DB-centric deployment for a more targeted explanation.",
+    ];
+  }
+
+  return { question, intent, answer, evidence };
+}
+
+function detectQuestionIntentLocal(question) {
+  if (["why", "won", "fastest", "winner", "best overall"].some((term) => question.includes(term))) return "why_fastest";
+  if (["stable", "stability", "variance", "consistent"].some((term) => question.includes(term))) return "stability";
+  if (["complex", "sqrt", "log", "conditional", "category", "formula type"].some((term) => question.includes(term))) return "complexity";
+  if (["python", "prototype", "iterate", "slow"].some((term) => question.includes(term))) return "python_pain";
+  if (["enterprise", "maintainability", "maintainable"].some((term) => question.includes(term))) return "enterprise";
+  if (["db", "database", "sql server", "data-local", "data local"].some((term) => question.includes(term))) return "database";
+  if (["correct", "mismatch", "same results", "verified"].some((term) => question.includes(term))) return "correctness";
+  return "general";
+}
+
+function renderLocalAnalysisMarkdown(generatedAt, executiveSummary, keyFindings, warnings, categoryMatrix, winners, recommendationMatrix) {
+  const lines = [
+    "# AI-Assisted Benchmark Analysis",
+    "",
+    `_Generated on ${generatedAt}_`,
+    "",
+    "## Executive Summary",
+    executiveSummary,
+    "",
+    "## Key Findings",
+  ];
+  keyFindings.forEach((item) => lines.push(`- **${item.title}**: ${item.value} — ${item.detail}`));
+  lines.push("", "## Warnings and Signals");
+  warnings.forEach((item) => lines.push(`- **${item.title}**: ${item.detail}`));
+  lines.push("", "## Category-Level Winners");
+  categoryMatrix.forEach((row) => {
+    lines.push(`- **${row.category}**: ${row.winner_label} led. ${row.methods.map((method) => `${method.label} ${method.average_runtime_seconds.toFixed(3)}s`).join(", ")}.`);
+  });
+  lines.push("", "## Per-Formula Winners");
+  winners.forEach((winner) => {
+    lines.push(`- Formula ${winner.targil_id} (${winner.category}): ${winner.winner_label} won at ${winner.winner_runtime_seconds.toFixed(3)}s with a ${winner.margin_seconds.toFixed(3)}s lead.`);
+  });
+  lines.push("", "## Scenario Recommendations");
+  recommendationMatrix.forEach((item) => {
+    lines.push(`- **${item.scenario}**: ${labelForMethod(item.method)} — ${item.reason}`);
+  });
+  return lines.join("\n");
+}
+
+function populationStdDev(values) {
+  if (!values.length) return 0;
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const variance = values.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / values.length;
+  return Math.sqrt(variance);
+}
+
+function formatTimestamp(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }

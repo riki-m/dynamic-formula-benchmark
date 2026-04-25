@@ -1,0 +1,679 @@
+{
+  "overview": {
+    "project_title": "Dynamic Formula Intelligence Control Center",
+    "subtitle": "Benchmarking three execution architectures over 1,000,000 records with validated correctness and production-focused analysis.",
+    "records_processed": 1000000,
+    "formula_count": 11,
+    "execution_engines": 3,
+    "correctness_status": "Verified",
+    "fastest_method": "csharp_engine"
+  },
+  "summary": [
+    {
+      "method": "csharp_engine",
+      "formulas_executed": 11,
+      "total_records_processed": 11000000,
+      "average_runtime_seconds": 22.617666472727272,
+      "best_runtime_seconds": 17.6343424,
+      "worst_runtime_seconds": 40.6824532,
+      "total_runtime_seconds": 248.7943312
+    },
+    {
+      "method": "sql_dynamic",
+      "formulas_executed": 11,
+      "total_records_processed": 11000000,
+      "average_runtime_seconds": 32.54663636363636,
+      "best_runtime_seconds": 26.696,
+      "worst_runtime_seconds": 37.336,
+      "total_runtime_seconds": 358.013
+    },
+    {
+      "method": "python_eval",
+      "formulas_executed": 11,
+      "total_records_processed": 11000000,
+      "average_runtime_seconds": 61.586426036358304,
+      "best_runtime_seconds": 55.9157198999892,
+      "worst_runtime_seconds": 66.06583750000573,
+      "total_runtime_seconds": 677.4506863999413
+    }
+  ],
+  "logs": [
+    {
+      "targil_id": 1,
+      "method": "csharp_engine",
+      "run_time": 40.6824532,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 2,
+      "method": "csharp_engine",
+      "run_time": 18.0004231,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 3,
+      "method": "csharp_engine",
+      "run_time": 19.3330893,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 4,
+      "method": "csharp_engine",
+      "run_time": 17.6343424,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 5,
+      "method": "csharp_engine",
+      "run_time": 18.8918386,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 6,
+      "method": "csharp_engine",
+      "run_time": 21.1772278,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 7,
+      "method": "csharp_engine",
+      "run_time": 20.9179098,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 8,
+      "method": "csharp_engine",
+      "run_time": 19.5035241,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 9,
+      "method": "csharp_engine",
+      "run_time": 23.237147,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 10,
+      "method": "csharp_engine",
+      "run_time": 26.5458217,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 11,
+      "method": "csharp_engine",
+      "run_time": 22.8705542,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 1,
+      "method": "python_eval",
+      "run_time": 55.9157198999892,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 2,
+      "method": "python_eval",
+      "run_time": 58.740242100000614,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 3,
+      "method": "python_eval",
+      "run_time": 60.13536769998609,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 4,
+      "method": "python_eval",
+      "run_time": 65.67286429999513,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 5,
+      "method": "python_eval",
+      "run_time": 60.71769029999268,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 6,
+      "method": "python_eval",
+      "run_time": 60.05850119999377,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 7,
+      "method": "python_eval",
+      "run_time": 66.06583750000573,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 8,
+      "method": "python_eval",
+      "run_time": 64.10468729998684,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 9,
+      "method": "python_eval",
+      "run_time": 64.65872740000486,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 10,
+      "method": "python_eval",
+      "run_time": 60.16992299997946,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 11,
+      "method": "python_eval",
+      "run_time": 61.21112570000696,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 1,
+      "method": "sql_dynamic",
+      "run_time": 26.696,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 2,
+      "method": "sql_dynamic",
+      "run_time": 29.519,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 3,
+      "method": "sql_dynamic",
+      "run_time": 33.49,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 4,
+      "method": "sql_dynamic",
+      "run_time": 33.967,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 5,
+      "method": "sql_dynamic",
+      "run_time": 31.845,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 6,
+      "method": "sql_dynamic",
+      "run_time": 31.416,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 7,
+      "method": "sql_dynamic",
+      "run_time": 30.811,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 8,
+      "method": "sql_dynamic",
+      "run_time": 34.714,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 9,
+      "method": "sql_dynamic",
+      "run_time": 33.807,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 10,
+      "method": "sql_dynamic",
+      "run_time": 34.412,
+      "records_processed": 1000000
+    },
+    {
+      "targil_id": 11,
+      "method": "sql_dynamic",
+      "run_time": 37.336,
+      "records_processed": 1000000
+    }
+  ],
+  "formulas": [
+    {
+      "targil_id": 1,
+      "targil": "a + b",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Arithmetic",
+      "display_formula": "a + b"
+    },
+    {
+      "targil_id": 2,
+      "targil": "c * 2",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Arithmetic",
+      "display_formula": "c * 2"
+    },
+    {
+      "targil_id": 3,
+      "targil": "b - a",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Arithmetic",
+      "display_formula": "b - a"
+    },
+    {
+      "targil_id": 4,
+      "targil": "d / 4",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Arithmetic",
+      "display_formula": "d / 4"
+    },
+    {
+      "targil_id": 5,
+      "targil": "(a + b) * 8",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Arithmetic",
+      "display_formula": "(a + b) * 8"
+    },
+    {
+      "targil_id": 6,
+      "targil": "sqrt(c^2 + d^2)",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Complex",
+      "display_formula": "sqrt(c^2 + d^2)"
+    },
+    {
+      "targil_id": 7,
+      "targil": "log(b) + c",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Complex",
+      "display_formula": "log(b) + c"
+    },
+    {
+      "targil_id": 8,
+      "targil": "abs(d - b)",
+      "tnai": null,
+      "targil_false": null,
+      "category": "Complex",
+      "display_formula": "abs(d - b)"
+    },
+    {
+      "targil_id": 9,
+      "targil": "b * 2",
+      "tnai": "a > 5",
+      "targil_false": "b / 2",
+      "category": "Conditional",
+      "display_formula": "if(a > 5, b * 2, b / 2)"
+    },
+    {
+      "targil_id": 10,
+      "targil": "a + 1",
+      "tnai": "b < 10",
+      "targil_false": "d - 1",
+      "category": "Conditional",
+      "display_formula": "if(b < 10, a + 1, d - 1)"
+    },
+    {
+      "targil_id": 11,
+      "targil": "1",
+      "tnai": "a = c",
+      "targil_false": "0",
+      "category": "Conditional",
+      "display_formula": "if(a = c, 1, 0)"
+    }
+  ],
+  "correctness": [
+    {
+      "label": "Python vs SQL Dynamic",
+      "base_method": "python_eval",
+      "compare_method": "sql_dynamic",
+      "mismatched_rows": 0
+    },
+    {
+      "label": "Python vs C# Engine",
+      "base_method": "python_eval",
+      "compare_method": "csharp_engine",
+      "mismatched_rows": 0
+    },
+    {
+      "label": "C# Engine vs SQL Dynamic",
+      "base_method": "csharp_engine",
+      "compare_method": "sql_dynamic",
+      "mismatched_rows": 0
+    }
+  ],
+  "tradeoffs": [
+    {
+      "method": "csharp_engine",
+      "headline": "Fastest balanced production choice",
+      "maintainability": 9,
+      "extensibility": 9,
+      "operational_complexity": 6,
+      "runtime_flexibility": 8,
+      "narrative": "Best overall runtime with strong backend structure, type safety, and clean integration into enterprise services."
+    },
+    {
+      "method": "sql_dynamic",
+      "headline": "Strongest data-local execution path",
+      "maintainability": 6,
+      "extensibility": 6,
+      "operational_complexity": 8,
+      "runtime_flexibility": 7,
+      "narrative": "Executes near the data and performs well, but requires more careful operational governance and SQL-generation discipline."
+    },
+    {
+      "method": "python_eval",
+      "headline": "Fastest to prototype and iterate",
+      "maintainability": 7,
+      "extensibility": 8,
+      "operational_complexity": 5,
+      "runtime_flexibility": 9,
+      "narrative": "Excellent for rapid implementation and experimentation, but materially slower at the measured scale."
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Highest Performance",
+      "method": "csharp_engine",
+      "reason": "Delivered the best measured average runtime across the benchmark."
+    },
+    {
+      "title": "Fastest Implementation",
+      "method": "python_eval",
+      "reason": "Offers the shortest path from formula text to execution with minimal ceremony."
+    },
+    {
+      "title": "Database-Centric Deployment",
+      "method": "sql_dynamic",
+      "reason": "Keeps execution close to the data and reduces application-side transfer overhead."
+    }
+  ],
+  "ai_analysis": {
+    "summary_markdown": "# AI-Assisted Benchmark Analysis\n\n_Generated on 2026-04-25 21:30:32_\n\n## Executive Summary\nThis analysis was generated directly from measured benchmark logs over 1,000,000 records and 11 formulas. C# Engine delivered the strongest overall runtime profile, while SQL Dynamic showed the most stable timing behavior. The performance spread between the fastest and slowest engine reached 38.969s per formula, which makes execution architecture a meaningful production decision.\n\n## Key Findings\n- **Fastest Overall**: C# Engine — C# Engine achieved the lowest average runtime at 22.618s per formula, beating Python Eval by 38.969s.\n- **Most Stable Runtime**: SQL Dynamic — Runtime variance stayed lowest for SQL Dynamic, with a standard deviation of 2.760s.\n- **Closest Race**: Formula 10 — C# Engine won this formula by only 7.866s.\n- **Largest Advantage**: Formula 4 — C# Engine created the widest gap here at 16.333s.\n\n## Warnings and Signals\n- **Large performance spread**: The slowest engine is more than 2x slower than the fastest one, so architecture choice materially affects latency.\n- **Correctness stayed fully aligned**: All 3 validated pairwise comparisons returned mismatched_rows = 0, so the benchmark ranking is safe to trust.\n\n## Category-Level Winners\n- **Arithmetic**: C# Engine led. C# Engine 22.908s, SQL Dynamic 31.103s, Python Eval 60.236s.\n- **Complex**: C# Engine led. C# Engine 20.533s, SQL Dynamic 32.314s, Python Eval 63.410s.\n- **Conditional**: C# Engine led. C# Engine 24.218s, SQL Dynamic 35.185s, Python Eval 62.013s.\n\n## Per-Formula Winners\n- Formula 1 (Arithmetic): SQL Dynamic won at 26.696s with a 13.986s lead.\n- Formula 2 (Arithmetic): C# Engine won at 18.000s with a 11.519s lead.\n- Formula 3 (Arithmetic): C# Engine won at 19.333s with a 14.157s lead.\n- Formula 4 (Arithmetic): C# Engine won at 17.634s with a 16.333s lead.\n- Formula 5 (Arithmetic): C# Engine won at 18.892s with a 12.953s lead.\n- Formula 6 (Complex): C# Engine won at 21.177s with a 10.239s lead.\n- Formula 7 (Complex): C# Engine won at 20.918s with a 9.893s lead.\n- Formula 8 (Complex): C# Engine won at 19.504s with a 15.210s lead.\n- Formula 9 (Conditional): C# Engine won at 23.237s with a 10.570s lead.\n- Formula 10 (Conditional): C# Engine won at 26.546s with a 7.866s lead.\n- Formula 11 (Conditional): C# Engine won at 22.871s with a 14.465s lead.\n\n## Scenario Recommendations\n- **Best overall production choice**: C# Engine — This engine delivered the strongest benchmark profile on the measured workload.\n- **Best for rapid prototyping**: Python Eval — The simplest formula-to-execution path with minimal implementation ceremony.\n- **Best for DB-centric deployment**: SQL Dynamic — Keeps execution close to the data and avoids repeated application-side transfer work.",
+    "download_pdf_url": "/api/analysis/download.pdf",
+    "generated_at": "2026-04-25 22:20:12",
+    "executive_summary": "This analysis was generated directly from measured benchmark logs over 1,000,000 records and 11 formulas. C# Engine delivered the strongest overall runtime profile, while SQL Dynamic showed the most stable timing behavior. The performance spread between the fastest and slowest engine reached 38.969s per formula, which makes execution architecture a meaningful production decision.",
+    "key_findings": [
+      {
+        "title": "Fastest Overall",
+        "value": "C# Engine",
+        "detail": "C# Engine achieved the lowest average runtime at 22.618s per formula, beating Python Eval by 38.969s."
+      },
+      {
+        "title": "Most Stable Runtime",
+        "value": "SQL Dynamic",
+        "detail": "Runtime variance stayed lowest for SQL Dynamic, with a standard deviation of 2.760s."
+      },
+      {
+        "title": "Closest Race",
+        "value": "Formula 10",
+        "detail": "C# Engine won this formula by only 7.866s."
+      },
+      {
+        "title": "Largest Advantage",
+        "value": "Formula 4",
+        "detail": "C# Engine created the widest gap here at 16.333s."
+      }
+    ],
+    "warnings": [
+      {
+        "title": "Large performance spread",
+        "detail": "The slowest engine is more than 2x slower than the fastest one, so architecture choice materially affects latency."
+      },
+      {
+        "title": "Correctness stayed fully aligned",
+        "detail": "All 3 validated pairwise comparisons returned mismatched_rows = 0, so the benchmark ranking is safe to trust."
+      }
+    ],
+    "category_matrix": [
+      {
+        "category": "Arithmetic",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "methods": [
+          {
+            "method": "csharp_engine",
+            "label": "C# Engine",
+            "average_runtime_seconds": 22.90842932
+          },
+          {
+            "method": "sql_dynamic",
+            "label": "SQL Dynamic",
+            "average_runtime_seconds": 31.1034
+          },
+          {
+            "method": "python_eval",
+            "label": "Python Eval",
+            "average_runtime_seconds": 60.236376859992745
+          }
+        ]
+      },
+      {
+        "category": "Complex",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "methods": [
+          {
+            "method": "csharp_engine",
+            "label": "C# Engine",
+            "average_runtime_seconds": 20.532887233333334
+          },
+          {
+            "method": "sql_dynamic",
+            "label": "SQL Dynamic",
+            "average_runtime_seconds": 32.31366666666667
+          },
+          {
+            "method": "python_eval",
+            "label": "Python Eval",
+            "average_runtime_seconds": 63.40967533332878
+          }
+        ]
+      },
+      {
+        "category": "Conditional",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "methods": [
+          {
+            "method": "csharp_engine",
+            "label": "C# Engine",
+            "average_runtime_seconds": 24.217840966666667
+          },
+          {
+            "method": "sql_dynamic",
+            "label": "SQL Dynamic",
+            "average_runtime_seconds": 35.185
+          },
+          {
+            "method": "python_eval",
+            "label": "Python Eval",
+            "average_runtime_seconds": 62.013258699997095
+          }
+        ]
+      }
+    ],
+    "recommendation_matrix": [
+      {
+        "scenario": "Best overall production choice",
+        "method": "csharp_engine",
+        "reason": "This engine delivered the strongest benchmark profile on the measured workload."
+      },
+      {
+        "scenario": "Best for rapid prototyping",
+        "method": "python_eval",
+        "reason": "The simplest formula-to-execution path with minimal implementation ceremony."
+      },
+      {
+        "scenario": "Best for DB-centric deployment",
+        "method": "sql_dynamic",
+        "reason": "Keeps execution close to the data and avoids repeated application-side transfer work."
+      }
+    ],
+    "formula_winners": [
+      {
+        "targil_id": 1,
+        "formula": "a + b",
+        "category": "Arithmetic",
+        "winner_method": "sql_dynamic",
+        "winner_label": "SQL Dynamic",
+        "winner_runtime_seconds": 26.696,
+        "margin_seconds": 13.986453199999996
+      },
+      {
+        "targil_id": 2,
+        "formula": "c * 2",
+        "category": "Arithmetic",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 18.0004231,
+        "margin_seconds": 11.5185769
+      },
+      {
+        "targil_id": 3,
+        "formula": "b - a",
+        "category": "Arithmetic",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 19.3330893,
+        "margin_seconds": 14.156910700000001
+      },
+      {
+        "targil_id": 4,
+        "formula": "d / 4",
+        "category": "Arithmetic",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 17.6343424,
+        "margin_seconds": 16.332657599999997
+      },
+      {
+        "targil_id": 5,
+        "formula": "(a + b) * 8",
+        "category": "Arithmetic",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 18.8918386,
+        "margin_seconds": 12.953161399999999
+      },
+      {
+        "targil_id": 6,
+        "formula": "sqrt(c^2 + d^2)",
+        "category": "Complex",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 21.1772278,
+        "margin_seconds": 10.2387722
+      },
+      {
+        "targil_id": 7,
+        "formula": "log(b) + c",
+        "category": "Complex",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 20.9179098,
+        "margin_seconds": 9.8930902
+      },
+      {
+        "targil_id": 8,
+        "formula": "abs(d - b)",
+        "category": "Complex",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 19.5035241,
+        "margin_seconds": 15.210475899999999
+      },
+      {
+        "targil_id": 9,
+        "formula": "if(a > 5, b * 2, b / 2)",
+        "category": "Conditional",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 23.237147,
+        "margin_seconds": 10.569853000000002
+      },
+      {
+        "targil_id": 10,
+        "formula": "if(b < 10, a + 1, d - 1)",
+        "category": "Conditional",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 26.5458217,
+        "margin_seconds": 7.866178299999998
+      },
+      {
+        "targil_id": 11,
+        "formula": "if(a = c, 1, 0)",
+        "category": "Conditional",
+        "winner_method": "csharp_engine",
+        "winner_label": "C# Engine",
+        "winner_runtime_seconds": 22.8705542,
+        "margin_seconds": 14.465445799999998
+      }
+    ],
+    "summary_rows": [
+      {
+        "method": "csharp_engine",
+        "formulas_executed": 11,
+        "total_records_processed": 11000000,
+        "average_runtime_seconds": 22.617666472727272,
+        "best_runtime_seconds": 17.6343424,
+        "worst_runtime_seconds": 40.6824532,
+        "total_runtime_seconds": 248.7943312
+      },
+      {
+        "method": "sql_dynamic",
+        "formulas_executed": 11,
+        "total_records_processed": 11000000,
+        "average_runtime_seconds": 32.54663636363636,
+        "best_runtime_seconds": 26.696,
+        "worst_runtime_seconds": 37.336,
+        "total_runtime_seconds": 358.013
+      },
+      {
+        "method": "python_eval",
+        "formulas_executed": 11,
+        "total_records_processed": 11000000,
+        "average_runtime_seconds": 61.586426036358304,
+        "best_runtime_seconds": 55.9157198999892,
+        "worst_runtime_seconds": 66.06583750000573,
+        "total_runtime_seconds": 677.4506863999413
+      }
+    ],
+    "correctness_cards": [
+      {
+        "label": "Python vs SQL Dynamic",
+        "base_method": "python_eval",
+        "compare_method": "sql_dynamic",
+        "mismatched_rows": 0
+      },
+      {
+        "label": "Python vs C# Engine",
+        "base_method": "python_eval",
+        "compare_method": "csharp_engine",
+        "mismatched_rows": 0
+      },
+      {
+        "label": "C# Engine vs SQL Dynamic",
+        "base_method": "csharp_engine",
+        "compare_method": "sql_dynamic",
+        "mismatched_rows": 0
+      }
+    ],
+    "fastest_method": "csharp_engine",
+    "most_stable_method": "sql_dynamic",
+    "performance_gap_seconds": 38.96875956363103,
+    "suggested_questions": [
+      "Why did C# win overall?",
+      "Which formula types widened the gap between methods?",
+      "Which method is the most stable?",
+      "Why is Python still useful if it is slower?",
+      "What is the best option for enterprise systems?"
+    ]
+  }
+}

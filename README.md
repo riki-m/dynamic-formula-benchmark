@@ -54,13 +54,21 @@ dynamic-formula-benchmark/
 |   |-- FORMULA_EVALUATION.md
 |   |-- INTELLIGENCE_ENGINE.md
 |   `-- SQL_SERVER_RUNBOOK.md
+|-- .github/
+|   `-- workflows/
+|       `-- deploy-pages.yml
 |-- report-api/
-|   `-- app/
-|       `-- main.py
+|   |-- app/
+|   |   `-- main.py
+|   `-- export_public_snapshot.py
 |-- report-ui/
 |   |-- index.html
 |   |-- styles.css
-|   `-- app.js
+|   |-- app.js
+|   |-- data/
+|   |   `-- dashboard.json
+|   `-- assets/
+|       `-- benchmark-ai-analysis.pdf
 |-- .gitignore
 |-- PROJECT_PLAN.md
 |-- README.md
@@ -192,6 +200,32 @@ The dashboard presents:
 - generated executive findings and warnings
 - downloadable PDF report generated from measured benchmark data
 
+## Free Public Website Deployment
+
+This repository is also prepared for a free public showcase deployment through GitHub Pages.
+
+How it works:
+
+- the live local version uses FastAPI + SQL Server
+- the public GitHub Pages version uses a static snapshot generated from the measured benchmark data
+- the dashboard still presents the real benchmark outputs, charts, findings, and downloadable PDF report
+
+To refresh the public snapshot before pushing:
+
+```bash
+$env:DB_ENGINE="sqlserver"
+$env:SQLSERVER_CONNECTION_STRING="Driver={ODBC Driver 17 for SQL Server};Server=localhost\SQLEXPRESS;Database=DynamicFormulaBenchmark;Trusted_Connection=yes;TrustServerCertificate=yes;"
+python report-api/export_public_snapshot.py
+```
+
+Then push to GitHub. The workflow in [.github/workflows/deploy-pages.yml](./.github/workflows/deploy-pages.yml) deploys the contents of [report-ui](./report-ui) to GitHub Pages.
+
+Important:
+
+- this public site is a showcase deployment, not a live cloud SQL Server environment
+- it is intentionally snapshot-based so it can be hosted for free and shared with examiners or reviewers
+- the snapshot is generated directly from your measured benchmark data before deployment
+
 ## Dynamic Benchmark Intelligence Layer
 
 A local intelligence layer is included for benchmark interpretation, report generation, and presentation polish.
@@ -220,4 +254,3 @@ Files:
 5. Implement and run `csharp_engine`.
 6. Compare all methods using the same result schema.
 7. Summarize runtime and correctness in the final report.
->>>>>>> 5b7fe32 (Initial commit with project files)
