@@ -13,6 +13,7 @@ dynamic-formula-benchmark/
 |       |-- Program.cs
 |       |-- FormulaEngine.cs
 |       |-- DatabaseService.cs
+|       |-- ExpressionSyntaxTransformer.cs
 |       `-- Models/
 |           |-- FormulaDefinition.cs
 |           `-- DataRecord.cs
@@ -29,11 +30,14 @@ dynamic-formula-benchmark/
 |   |-- scripts/
 |   |   |-- seed_data.py
 |   |   |-- run_python_eval.py
+|   |   |-- run_python_eval_sqlserver.py
 |   |   `-- compare_results.py
 |   `-- src/
 |       |-- config.py
 |       |-- db.py
-|       `-- formula_runtime.py
+|       |-- sqlserver_db.py
+|       |-- formula_runtime.py
+|       `-- syntax_transformer.py
 |-- report/
 |   |-- benchmark-ai-analysis.pdf
 |   |-- intelligence_summary.md
@@ -42,7 +46,15 @@ dynamic-formula-benchmark/
 |       |-- t_data.jpg
 |       |-- t_targil.jpg
 |       |-- t_results.jpg
-|       `-- t_log.jpg
+|       |-- t_log.jpg
+|       |-- landing-navigation-dashboard.jpg
+|       |-- overview-dashboard.jpg
+|       |-- correctness-dashboard.jpg
+|       |-- performance-dashboard.jpg
+|       |-- formula-analysis-dashboard.jpg
+|       |-- tradeoff-dashboard.jpg
+|       |-- recommendation-dashboard.jpg
+|       `-- intelligence-dashboard.jpg
 |-- report-api/
 |   |-- app/
 |   |   |-- analysis_engine.py
